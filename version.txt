@@ -1,0 +1,30 @@
+VSVersionInfo(
+  ffi=FixedFileInfo(
+    filevers=(1, 0, 0, 0),
+    prodvers=(1, 0, 0, 0),
+    mask=0x3f,
+    flags=0x0,
+    OS=0x4,
+    fileType=0x1,
+    subtype=0x0,
+    date=(0, 0)
+  ),
+  kids=[
+    StringFileInfo(
+      [
+        StringTable(
+          '040904B0',
+          [StringStruct('CompanyName', 'STG Consulting LLC'),
+          StringStruct('FileDescription', 'Downloads the latest created MSFS Flightplan and saves it a LAST.PLN for quick usage'),
+          StringStruct('FileVersion', '1.0.0.0'),
+		  StringStruct('LegalCopyright', 'Copyright © 2024 STG Consulting LLC'),
+		  StringStruct('Author', 'Jesus Altuve'),
+          StringStruct('InternalName', 'GetFP'),
+          StringStruct('OriginalFilename', 'GetFP.exe'),
+          StringStruct('ProductName', 'Simple Flight Plan Downloader'),
+          StringStruct('ProductVersion', '1.0.0.0')]
+        )
+      ]),
+    VarFileInfo([VarStruct('Translation', [1033, 1200])])
+  ]
+)
