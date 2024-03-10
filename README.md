@@ -13,8 +13,8 @@ You can download the source and run the Python script or simply download the rel
 ## Configuration
 When running for the first time the application will request your Simbrief Alias (Username) so it can fetch the latest Flight Plan. You can find your Alias in the Account Settings menu option of your Simbrief page. Once the initial fetch is succesful, a configuration .ini file will be created using the following format:
 
-```[Settings]
+`[Settings]
 simbriefuser = YOUR_USERNAME  # Here simply enter your Simbrief username. You can find it in the Account settings under Alias (Username) 
 filename = LAST.PLN           # This is the name of the .PLN file that will be created, since you'll be downloading always the latest Flight Plan it makes sense to use a name like LAST.PLN, but you can use any name you want
 include_sid_star = 1          # Flight Plan downloaded from Simbrief can include SID/STAR or simply waypoints, you can change this here. 
-delete_customflight = 0       # If you would like your MISSIONS/Custom folder to be cleaned/removed when you run the utility set this to 1.```
+delete_customflight = 0       # If you would like your MISSIONS/Custom folder to be cleaned/removed when you run the utility set this to 1.`
