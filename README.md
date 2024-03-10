@@ -20,3 +20,5 @@ filename = LAST.PLN           # This is the name of the .PLN file that will be c
 include_sid_star = 1          # Flight Plan downloaded from Simbrief can include SID/STAR or simply waypoints. 
 delete_customflight = 0       # Removes the MISSIONS/Custom folder when you run the utility and set this to 1.
 ```
+> [!WARNING]
+> Its possible you get a virus warning when downloading this file, in that case I suggest you download the sources or execute the Python script directly. Its the exact same program.
