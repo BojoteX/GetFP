@@ -10,6 +10,9 @@ GetFP is a simple utility tool designed to streamline the process of downloading
 
 You can download the source and run the Python script or simply download the release version (.exe)
 
+> [!WARNING]
+> Its possible you get a virus warning when downloading this file, in that case I suggest you download the sources or execute the Python script directly. Its the exact same program.
+
 ## Configuration
 When running for the first time the application will request your Simbrief Alias (Username) so it can fetch the latest Flight Plan. You can find your Alias in the Account Settings menu option of your Simbrief page. Once the initial fetch is succesful, a configuration .ini file will be created using the following format:
 
@@ -20,5 +23,4 @@ filename = LAST.PLN           # This is the name of the .PLN file that will be c
 include_sid_star = 1          # Flight Plan downloaded from Simbrief can include SID/STAR or simply waypoints. 
 delete_customflight = 0       # Removes the MISSIONS/Custom folder when you run the utility and set this to 1.
 ```
-> [!WARNING]
-> Its possible you get a virus warning when downloading this file, in that case I suggest you download the sources or execute the Python script directly. Its the exact same program.
+
