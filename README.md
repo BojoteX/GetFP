@@ -1,4 +1,4 @@
-# Flight Plan Downloader
+#GetFP#
 
 ## Description
 GetFP is a simple utility tool designed to streamline the process of downloading your Simbrief most recent MSFS flight plan directly into Microsoft Flight Simulator. It simplifies the workflow for sim pilots who would like to start from a custom GATE or RAMP. Just include the GATE number in the Simbrief Flight Plan remarks and the utility will automatically create a .FLT file with the custom start location. for GATES simply use GATE D42 or GATE D 42 in a single line. For RAMP you'll use RAMP 32 or RAMP A23. 
