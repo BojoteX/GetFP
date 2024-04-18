@@ -158,18 +158,18 @@ def fetch_pln_url():
         remarks_list = data['general']['dx_rmk']  # This is now understood to be a list.
 
         # Adjusted regex pattern to capture letter and number separately
-        gate_pattern = r"GATE\s*([A-Z]?)(\s?\d+)"
+        gate_pattern = r"(GATE|PARKING)\s*([A-Z]?)(\s?\d+)"
 
         normalized_gate = ""
         for remark in remarks_list:
-            match = re.search(gate_pattern, remark)
+            match = re.search(location, gate_pattern, remark)
             if match:
                 letter, number = match.groups()
                 # Normalize to ensure a space between letter and number, if letter is present
                 if letter:
-                    normalized_gate = f"GATE {letter} {number.strip()}"
+                    normalized_gate = f"{location} {letter} {number.strip()}"
                 else:
-                    normalized_gate = f"GATE {number.strip()}"
+                    normalized_gate = f"{location} {number.strip()}"
                 break  # Exit the loop after finding the first match
         
         if not normalized_gate:
