@@ -27,3 +27,4 @@ include_sid_star = 1          # Flight Plan downloaded from Simbrief can include
 delete_customflight = 0       # Removes the MISSIONS/Custom folder when you run the utility and set this to 1.
 ```
 
+The location of the .INI file is %appdata%\GetFP\GetFP.ini 
