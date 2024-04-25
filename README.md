@@ -3,12 +3,13 @@
 ![Flight Plan Remarks](https://github.com/BojoteX/GetFP/blob/main/simbrief.jpg?raw=true)
 
 ## Description
-GetFP is a simple utility tool designed to streamline the process of downloading your Simbrief most recent MSFS flight plan directly into Microsoft Flight Simulator. It simplifies the workflow for sim pilots who would like to start from a custom GATE or RAMP. Just include the GATE number in the Simbrief Flight Plan remarks and the utility will automatically create a .FLT file with the custom start location. for GATES simply use GATE D42 or GATE D 42 in a single line. For RAMP you'll use RAMP 32 or RAMP A23. 
+GetFP is a simple utility tool designed to streamline the process of downloading your Simbrief most recent MSFS flight plan directly into Microsoft Flight Simulator. It simplifies the workflow for sim pilots who would like to start from a custom GATE or PARKING stand. Just include the GATE number in the Simbrief Flight Plan remarks and the utility will automatically create a .PLN file with the custom start location. for GATES simply use GATE D42 or GATE D 42 in a single line. For PARKING you'll use PARKING XX or PARKING YY where XX or YY are the numbers that correspond to the actual parking location. Same applies to GATES. You'll need to know the GATE number (or LETTER + NUMBER) you want to start from.  
 
 ## Features
 - Download MSFS flight plan from SimBrief with custom start location.
 - Supports both MS Store and Steam versions of MSFS.
 - Option to include or exclude SID/STARs in the downloaded flight plan.
+- Integrates with FSAutoSave for seamleass Save/Resume flights with MSFS ATC enabled. 
 
 You can download the source and run the Python script or simply download the release version (.exe)
 
