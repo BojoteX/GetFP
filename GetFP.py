@@ -1,6 +1,6 @@
 # Flight Plan Downloader by Bojote
 # To create .exe file run:
-# pyinstaller --onefile --windowed --version-file=version.txt --icon=fp_small.ico --add-data "fp_small.ico;." GetFP.py
+# pyinstaller --onefile --windowed --version-file=version.txt --icon=fp_small.ico --add-data "fp_small.ico;." --distpath C:\Tools\GetFP GetFP.py
 
 import sys
 import os
@@ -32,13 +32,56 @@ icon_path = resource_path('fp_small.ico')
 root.iconbitmap(icon_path)
 
 def show_message(title, message):
-    messagebox.showinfo(title, message, parent=root)
+    msg_window = tk.Toplevel(root)
+    msg_window.title(title)
 
-def get_user_input(prompt):
+    # Set the icon using the resource_path
+    icon_path = resource_path('fp_small.ico')
+    msg_window.iconbitmap(icon_path)
+
+    # Set the window to be always on top
+    msg_window.attributes('-topmost', 1)
+
+    # Setup the message and button within the window
+    message_label = tk.Message(msg_window, text=message, padx=20, pady=20, width=300)  # Adjust width as needed
+    message_label.pack()
+    button = tk.Button(msg_window, text="OK", command=msg_window.destroy)
+    button.pack(pady=10)
+
+    # Set the size of the window and center it
+    window_width = 400  # Adjust size as needed
+    window_height = 150  # Adjust size as needed
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x_coordinate = int((screen_width/2) - (window_width/2))
+    y_coordinate = int((screen_height/2) - (window_height/2))
+    msg_window.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
+
+    # Make dialog modal and force focus
+    msg_window.grab_set()
+    msg_window.focus_force()
+    msg_window.wait_window()
+
+def validate_username(username):
+    # Validates username by checking if a network fetch succeeds.
+    json_url = f"https://www.simbrief.com/api/xml.fetcher.php?username={username}&json=v2"
+    response = requests.get(json_url)
+    if response.status_code == 200:
+        return username
+    else:
+        return None
+
+def get_user_input(prompt, custom_width=400, custom_height=150, entry_width=30):
     def on_ok():
         nonlocal input_value
-        input_value = entry.get()
-        dialog.destroy()
+        validated_username = validate_username(entry.get())
+        if validated_username:
+            input_value = validated_username
+            dialog.destroy()
+        else:
+            show_message("Invalid Username", "The username entered is not valid. Please try again.")
+            # messagebox.showerror("Invalid Username", "The username entered is not valid. Please try again.")
+            entry.delete(0, tk.END)  # Clear the entry widget for new input
 
     def on_cancel():
         nonlocal input_value
@@ -46,26 +89,50 @@ def get_user_input(prompt):
         dialog.destroy()
 
     input_value = None  # Default value to indicate no input or cancellation
+    
     dialog = tk.Toplevel(root)
+    icon_path = resource_path('fp_small.ico')
     dialog.iconbitmap(icon_path)
     dialog.title("GetFP")
-    dialog.geometry("240x120")  # Adjust size as needed
-    dialog.grab_set()  # Make dialog modal
 
-    tk.Label(dialog, text=prompt).pack(pady=10)
-    entry = tk.Entry(dialog)
-    entry.pack(pady=5)
-    entry.bind("<Return>", lambda event: on_ok())
+    # Apply initial dimensions and center the window initially
+    dialog.geometry("+0+0")
+
+    # Create dialog content
+    label = tk.Label(dialog, text=prompt, wraplength=custom_width - 20)
+    label.pack(pady=(10, 0))  # Padding at the top only
+
+    # Determine the width of the entry based on the optional parameter or default to 50
+    if entry_width is None:
+        entry_width = int(custom_width / 8)  # Default based on custom_width
+
+    entry = tk.Entry(dialog, width=entry_width)
+    entry.pack(pady=(10, 20))  # Padding above and below
 
     button_frame = tk.Frame(dialog)
-    button_frame.pack(pady=5)
+    button_frame.pack(pady=(0, 10))  # Padding at the bottom only
     ok_button = tk.Button(button_frame, text="OK", command=on_ok)
-    ok_button.pack(side=tk.LEFT, padx=(0,10))
+    ok_button.pack(side=tk.LEFT, padx=(10, 20), expand=True)
     cancel_button = tk.Button(button_frame, text="Cancel", command=on_cancel)
-    cancel_button.pack(side=tk.RIGHT)
+    cancel_button.pack(side=tk.RIGHT, expand=True)
+
+    dialog.attributes('-topmost', 1)  # Ensure the dialog stays on top
+    dialog.grab_set()  # Make the dialog modal
+    dialog.focus_force()  # Force the dialog to take focus
+
+    dialog.update_idletasks()  # Update the dialog to calculate its size
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+
+    # Calculate window size dynamically or use custom values
+    window_width = custom_width
+    window_height = dialog.winfo_reqheight() if custom_height is None else custom_height
+
+    x_coordinate = int((screen_width/2) - (window_width/2))
+    y_coordinate = int((screen_height/2) - (window_height/2))
+    dialog.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
 
     dialog.protocol("WM_DELETE_WINDOW", on_cancel)  # Handle window close (X) button click
-
     dialog.wait_window(dialog)  # Wait for the dialog to close before moving on
 
     return input_value
@@ -85,9 +152,15 @@ if PlanSaveLocation is None:
     show_message("Error", "Microsoft Flight Simulator not found.")
     sys.exit(1)  # Exit the script if not found
 
+import os
+import configparser
+
 def get_settings_from_ini():
     config = configparser.ConfigParser()
-    ini_path = 'GetFP.ini'
+    # Construct the full path to the INI file
+    ini_path = os.path.join(os.getenv('APPDATA'), 'GetFP', 'GetFP.ini')
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(ini_path), exist_ok=True)
     # Define default settings
     defaults = {
         'SimBriefUser': None,  # This will be prompted for if not found
@@ -107,13 +180,16 @@ def get_settings_from_ini():
         else:
             show_message("Error", "No SimBrief username provided.")
             sys.exit(1)
-
     return settings
 
 def save_settings_to_ini(settings):
     config = configparser.ConfigParser()
     config['Settings'] = settings
-    with open('GetFP.ini', 'w') as configfile:
+    ini_path = os.path.join(os.getenv('APPDATA'), 'GetFP', 'GetFP.ini')
+    # Ensure the directory exists
+    os.makedirs(os.path.dirname(ini_path), exist_ok=True)
+    # Write settings to the specified INI file path
+    with open(ini_path, 'w') as configfile:
         config.write(configfile)
 
 settings = get_settings_from_ini()
@@ -162,9 +238,9 @@ def fetch_pln_url():
 
         normalized_gate = ""
         for remark in remarks_list:
-            match = re.search(location, gate_pattern, remark)
+            match = re.search(gate_pattern, remark)
             if match:
-                letter, number = match.groups()
+                location, letter, number = match.groups()
                 # Normalize to ensure a space between letter and number, if letter is present
                 if letter:
                     normalized_gate = f"{location} {letter} {number.strip()}"
@@ -195,19 +271,21 @@ def download_file(pln_url, normalized_gate):
         for elem in root.xpath('.//RunwayNumberFP | .//RunwayDesignatorFP | .//DepartureFP | .//ArrivalFP'):
             elem.getparent().remove(elem)
 
+        # Retrieve DepartureName for display
+        departure_name_element = root.find('.//FlightPlan.FlightPlan/DepartureName')
+        departure_name = departure_name_element.text if departure_name_element is not None else "Unknown Departure"
+
         if normalized_gate:  # Check if normalized_gate is not empty    
-            # Find the DepartureName element within FlightPlan.FlightPlan
-            departure_name_element = root.find('.//FlightPlan.FlightPlan/DepartureName')
+            # Create the DeparturePosition element
+            departure_position_element = etree.Element('DeparturePosition')
+            departure_position_element.text = normalized_gate
+            departure_position_element.tail = '\n\t'  # Ensure a newline follows the element
+
             if departure_name_element is not None:
-                # Create the DeparturePosition element
-                departure_position_element = etree.Element('DeparturePosition')
-                departure_position_element.text = normalized_gate
-                departure_position_element.tail = '\n\t'  # Ensure a newline follows the element
-            
                 # Find the index of DepartureName in its parent's children
                 parent = departure_name_element.getparent()
                 index = parent.index(departure_name_element)
-            
+
                 # Insert DeparturePosition right after DepartureName
                 parent.insert(index, departure_position_element)
 
@@ -218,9 +296,9 @@ def download_file(pln_url, normalized_gate):
         with open(file_path, 'wb') as file:
             file.write(etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8'))
             if normalized_gate:
-                show_message("Success", f"Flight Plan downloaded. Just load {PlanSaveName} to start your flight at {normalized_gate}.")
+                show_message("Success", f"Flight Plan downloaded. Just load {PlanSaveName} to start your flight at {normalized_gate} from {departure_name}. If resuming a Flight (with FSAutoSave) load LAST.FLT instead")
             else:
-                show_message("Success", f"Flight Plan downloaded. Just load {PlanSaveName} to start your flight.")
+                show_message("Success", f"Flight Plan downloaded. Just load {PlanSaveName} to start your flight in {departure_name}. If resuming a Flight (with FSAutoSave) load LAST.FLT instead")
     else:
         show_message("Error", f"Failed to download the file. Status code: {response.status_code}")
 
