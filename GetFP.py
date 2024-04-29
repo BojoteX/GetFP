@@ -137,23 +137,35 @@ def get_user_input(prompt, custom_width=400, custom_height=150, entry_width=30):
 
     return input_value
     
+# Function to safely check path existence including symlinks
+def safe_path_exists(path):
+    try:
+        # Directly check for existence without resolving the path
+        return path.exists()
+    except OSError as e:
+	# Log or handle the error here if needed
+        show_message("Error", f"{path} is not accesible. Delete directory or reinstall MSFS. This could also be due to permissions or a Symbolic link. Will exit now.") 
+        sys.exit(1)  # Exit the script if not found
+
 # Paths to check for MSFS
-ms_store_path = Path(os.getenv('LOCALAPPDATA')) / "Packages/Microsoft.FlightSimulator_8wekyb3d8bbwe"
+ms_store_path = Path(os.getenv('LOCALAPPDATA')) / "Packages/Microsoft.FlightSimulator_8wekyb3d8bbwe/LocalState"
 steam_path = Path(os.getenv('APPDATA')) / "Microsoft Flight Simulator"
 
 # Check for Microsoft Flight Simulator installation
 PlanSaveLocation = None  # Initialize with None to check if set later
-if ms_store_path.exists():
-    PlanSaveLocation = ms_store_path
-elif steam_path.exists():
+
+if safe_path_exists(steam_path) and safe_path_exists(ms_store_path):
+    PlanSaveLocation = None
+    show_message("Error", "Both Steam and MS Store versions are installed. This program requires only one version installed.")  
+    sys.exit(1)  # Exit the script if not found  
+elif safe_path_exists(steam_path):
     PlanSaveLocation = steam_path
+elif safe_path_exists(ms_store_path):
+    PlanSaveLocation = ms_store_path
 
 if PlanSaveLocation is None:
     show_message("Error", "Microsoft Flight Simulator not found.")
     sys.exit(1)  # Exit the script if not found
-
-import os
-import configparser
 
 def get_settings_from_ini():
     config = configparser.ConfigParser()
