@@ -14,17 +14,19 @@ VSVersionInfo(
       [
         StringTable(
           '040904B0',
-          [StringStruct('CompanyName', 'STG Consulting LLC'),
-          StringStruct('FileDescription', 'Downloads the latest created MSFS Flightplan and saves it a LAST.PLN for quick usage'),
-          StringStruct('FileVersion', '1.0.0.0'),
-		  StringStruct('LegalCopyright', 'Copyright © 2024 STG Consulting LLC'),
-		  StringStruct('Author', 'Jesus Altuve'),
-          StringStruct('InternalName', 'GetFP'),
-          StringStruct('OriginalFilename', 'GetFP.exe'),
-          StringStruct('ProductName', 'Simple Flight Plan Downloader'),
-          StringStruct('ProductVersion', '1.0.0.0')]
+          [
+            StringStruct('FileDescription', 'Downloads latest Simbrief Flightplan for MSFS'),
+            StringStruct('FileVersion', '1.0.0.0'),
+            StringStruct('LegalCopyright', 'Copyright © 2024 Jesus Altuve'),
+            StringStruct('Author', 'Jesus \'BOJOTE\' Altuve'),
+            StringStruct('InternalName', 'GetFP'),
+            StringStruct('OriginalFilename', 'GetFP.exe'),
+            StringStruct('ProductName', 'Simbrief MSFS Flight Plan Downloader'),
+            StringStruct('ProductVersion', '1.0.0.0')
+          ]
         )
-      ]),
+      ]
+    ),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]
 )
