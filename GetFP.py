@@ -147,20 +147,31 @@ def safe_path_exists(path):
         show_message("Error", f"{path} is not accesible. Delete directory or reinstall MSFS. This could also be due to permissions or a Symbolic link. Will exit now.") 
         sys.exit(1)  # Exit the script if not found
 
+def safe_file_exists(path):
+    try:
+        # Use os.path.isfile to check specifically for a file
+        return os.path.isfile(path)
+    except OSError as e:
+        # Log or handle the error here if needed
+        show_message("Error", f"Cannot access {path}. Check permissions, will exit now.")
+        sys.exit(1)  # Exit the script if there is a problem accessing the file
+
 # Paths to check for MSFS
+ms_store_path_cfg = Path(os.getenv('LOCALAPPDATA')) / "Packages/Microsoft.FlightSimulator_8wekyb3d8bbwe/LocalCache/UserCfg.opt"
 ms_store_path = Path(os.getenv('LOCALAPPDATA')) / "Packages/Microsoft.FlightSimulator_8wekyb3d8bbwe/LocalState"
+steam_path_cfg = Path(os.getenv('APPDATA')) / "Microsoft Flight Simulator/UserCfg.opt"
 steam_path = Path(os.getenv('APPDATA')) / "Microsoft Flight Simulator"
 
 # Check for Microsoft Flight Simulator installation
 PlanSaveLocation = None  # Initialize with None to check if set later
 
-if safe_path_exists(steam_path) and safe_path_exists(ms_store_path):
+if safe_file_exists(steam_path_cfg) and safe_file_exists(ms_store_path_cfg):
     PlanSaveLocation = None
     show_message("Error", "Both Steam and MS Store versions are installed. This program requires only one version installed.")  
     sys.exit(1)  # Exit the script if not found  
-elif safe_path_exists(steam_path):
+elif safe_file_exists(steam_path_cfg):
     PlanSaveLocation = steam_path
-elif safe_path_exists(ms_store_path):
+elif safe_file_exists(ms_store_path_cfg):
     PlanSaveLocation = ms_store_path
 
 if PlanSaveLocation is None:
